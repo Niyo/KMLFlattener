@@ -45,6 +45,8 @@ namespace KMLFlattener.WikipediaExport
 
         private byte openField;
 
+        private string descriptionField;
+
         private kmlDocumentFolder[] folderField;
 
         /// <remarks/>
@@ -70,6 +72,19 @@ namespace KMLFlattener.WikipediaExport
             set
             {
                 this.openField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string description
+        {
+            get
+            {
+                return this.descriptionField;
+            }
+            set
+            {
+                this.descriptionField = value;
             }
         }
 
@@ -162,11 +177,12 @@ namespace KMLFlattener.WikipediaExport
         private kmlDocumentFolderPlacemarkPoint pointField;
 
         private object snippetField;
+        private kmlDocumentPlacemarkData[] extendedDataField;
 
         //private string descriptionField;
 
         /// <remarks/>
-        public XmlCDataSection name
+        public string name
         {
             get;
             //{
@@ -176,6 +192,20 @@ namespace KMLFlattener.WikipediaExport
             //{
             //    this.nameField = value;
             //}
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("Data", IsNullable = false)]
+        public kmlDocumentPlacemarkData[] ExtendedData
+        {
+            get
+            {
+                return this.extendedDataField;
+            }
+            set
+            {
+                this.extendedDataField = value;
+            }
         }
 
         /// <remarks/>
@@ -206,7 +236,7 @@ namespace KMLFlattener.WikipediaExport
 
         //XmlCDataSection
         /// <remarks/>
-        public XmlCDataSection description
+        public string description
         {
             get;
             //{
@@ -216,6 +246,45 @@ namespace KMLFlattener.WikipediaExport
             //{
             //    this.descriptionField = value;
             //}
+        }
+    }
+
+    /// <remarks/>
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true/*, Namespace = "http://www.opengis.net/kml/2.2"*/)]
+    public partial class kmlDocumentPlacemarkData
+    {
+
+        private string valueField;
+
+        private string nameField;
+
+        /// <remarks/>
+        public string value
+        {
+            get
+            {
+                return this.valueField;
+            }
+            set
+            {
+                this.valueField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string name
+        {
+            get
+            {
+                return this.nameField;
+            }
+            set
+            {
+                this.nameField = value;
+            }
         }
     }
 
