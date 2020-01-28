@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
+using KMlFlattener.Kml22;
 
 namespace KMLFlattener
 {
@@ -44,23 +45,23 @@ namespace KMLFlattener
             if (!File.Exists(filePath))
                 MessageBox.Show("Invalid Filepath!");
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(kml));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(KmlType));
 
-            kml oldKmlFile;
+            KmlType oldKmlFile;
 
             using (var stream = File.OpenRead(filePath))
             {
                 using (XmlTextReader reader = new XmlTextReader(stream))
                 {
                     reader.Namespaces = false;
-                    oldKmlFile = xmlSerializer.Deserialize(reader) as kml;
+                    oldKmlFile = xmlSerializer.Deserialize(reader) as KmlType;
                 }
             }
 
             if (oldKmlFile == null)
                 MessageBox.Show("Invalid KML file!");
 
-            flattenKml(oldKmlFile);
+            //flattenKml(oldKmlFile);
 
             string newFileName = "New_" + Path.GetFileNameWithoutExtension(filePath) + ".kml";
 
@@ -75,27 +76,58 @@ namespace KMLFlattener
             MessageBox.Show($"Successful flattened kml file. Path: {path}");
         }
 
-        private void flattenKml(kml kmlFile)
+        //private void flattenKml(KmlType kmlFile)
+        //{
+        //    if (kmlFile.KmlObjectExtensionGroup. == null)
+        //        return;
+
+        //    var flattenedPlacemarks = kmlFile.Document.Folder.SelectMany(d => d.Placemark);
+
+        //    if (Chk_SplitElements.IsChecked == true)
+        //    {
+        //        string folderName = kmlFile.Document.Folder.FirstOrDefault().name;
+
+        //        const int pageCount = 2000;
+        //        int page = 0;
+
+        //        var folders = new List<kmlDocumentFolder>();
+
+        //        do
+        //        {
+        //            kmlDocumentFolder folder = new kmlDocumentFolder();
+        //            folder.name = folderName + page;
+        //            folder.Placemark = flattenedPlacemarks.Skip(page * pageCount).Take(pageCount).ToArray();
+
+        //            folders.Add(folder);
+
+        //            page++;
+        //        }
+        //        while (flattenedPlacemarks.Count() < page * pageCount);
+
+        //        kmlFile.Document.Folder = folders.ToArray();
+        //    }
+        //    else
+        //    {
+        //        if (kmlFile.Document.Placemark == null)
+        //        {
+        //            kmlFile.Document.Placemark = flattenedPlacemarks.ToArray();
+        //        }
+        //        else // merge placemarks
+        //        {
+        //            List<kmlDocumentFolderPlacemark> newPlaceMarks = new List<kmlDocumentFolderPlacemark>(kmlFile.Document.Placemark);
+
+        //            newPlaceMarks.AddRange(flattenedPlacemarks);
+
+        //            kmlFile.Document.Placemark = newPlaceMarks.ToArray();
+        //        }
+
+        //        kmlFile.Document.Folder = null;
+        //    }
+        //}
+
+        private void Chk_SplitElements_Checked(object sender, RoutedEventArgs e)
         {
-            if (kmlFile.Document.Folder == null)
-                return;
-
-             var flattenedPlacemarks = kmlFile.Document.Folder.SelectMany(d => d.Placemark);
-
-            if (kmlFile.Document.Placemark == null)
-            {
-                kmlFile.Document.Placemark = flattenedPlacemarks.ToArray();
-            }
-            else // merge placemarks
-            {
-                List<kmlDocumentFolderPlacemark> newPlaceMarks = new List<kmlDocumentFolderPlacemark>(kmlFile.Document.Placemark);
-
-                newPlaceMarks.AddRange(flattenedPlacemarks);
-
-                kmlFile.Document.Placemark = newPlaceMarks.ToArray();
-            }
-
-            kmlFile.Document.Folder = null;
+            
         }
     }
 }
