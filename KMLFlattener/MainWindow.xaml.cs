@@ -16,7 +16,7 @@ namespace KMLFlattener
         public MainWindow()
         {
             InitializeComponent();
-        }
+        } 
 
         private void BtnOpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -39,10 +39,7 @@ namespace KMLFlattener
 
         private void BtnFlatten_Click(object sender, RoutedEventArgs e)
         {
-            var filePath = TxtFilePath.Text;
-
-            if (!File.Exists(filePath))
-                MessageBox.Show("Invalid Filepath!");
+            string filePath = GetFilePath();
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(kml));
 
@@ -75,6 +72,15 @@ namespace KMLFlattener
             MessageBox.Show($"Successful flattened kml file. Path: {path}");
         }
 
+        private string GetFilePath()
+        {
+            var filePath = TxtFilePath.Text;
+
+            if (!File.Exists(filePath))
+                MessageBox.Show("Invalid Filepath!");
+            return filePath;
+        }
+
         private void flattenKml(kml kmlFile)
         {
             if (kmlFile.Document.Folder == null)
@@ -96,6 +102,33 @@ namespace KMLFlattener
             }
 
             kmlFile.Document.Folder = null;
+        }
+
+        private void BtnSplit_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = GetFilePath();
+
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(KMLFlattener.KmlWithStyles.kml));
+
+
+            KMLFlattener.KmlWithStyles.kml oldKmlFile;
+
+            using (var stream = File.OpenRead(filePath))
+            {
+                using (XmlTextReader reader = new XmlTextReader(stream))
+                {
+                    reader.Namespaces = false;
+                    oldKmlFile = xmlSerializer.Deserialize(reader) as KMLFlattener.KmlWithStyles.kml;
+                }
+            }
+
+            if (oldKmlFile == null)
+                MessageBox.Show("Invalid KML file!");
+
+            foreach (var placemark in oldKmlFile.Document.Items)
+            {
+                
+            }
         }
     }
 }
